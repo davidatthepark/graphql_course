@@ -1,1 +1,3 @@
-# graphql_course
+# GraphQL
+
+A personal repo for learning GraphQL
