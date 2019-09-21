@@ -1,6 +1,6 @@
 ## What is GraphQL?
 
-GraphQL is short for Graph Query Language. Instead of the server determining what data to send back to the client, the client decides with a query.
+GraphQL is short for Graph Query Language. Instead of the server determining what data to send back to the client, the client decides with a query. It's not an implementation. It is a specification.
 
 ## Why use GraphQL?
 
@@ -9,4 +9,4 @@ GraphQL is short for Graph Query Language. Instead of the server determining wha
 2. GraphQL is flexible
     - A mobile app doesn't need to endpoints. It can request a different set of data that is fit for a slower network or smaller screen.
 3. GraphQL is easy to use and simple to maintain
-    - No need to version the api. The client can simply change its query.
+    - No need to version the api. The client can simply change its query. Also, it is self-documenting.
