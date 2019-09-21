@@ -1,0 +1,26 @@
+{
+  "name": "graphql_course",
+  "version": "1.0.0",
+  "description": "A personal repo for learning GraphQL",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/davidatthepark/graphql_course.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/davidatthepark/graphql_course/issues"
+  },
+  "homepage": "https://github.com/davidatthepark/graphql_course#readme",
+  "dependencies": {},
+  "devDependencies": {
+    "eslint": "^6.4.0",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-plugin-import": "^2.18.2"
+  }
+}
