@@ -15,6 +15,7 @@ module.exports = {
     sourceType: 'module',
   },
   rules: {
-    "linebreak-style": 0
+    semi: ["error", "never"],
+    'linebreak-style': 0,
   },
 };
