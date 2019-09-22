@@ -10,3 +10,19 @@ GraphQL is short for Graph Query Language. Instead of the server determining wha
     - A mobile app doesn't need to endpoints. It can request a different set of data that is fit for a slower network or smaller screen.
 3. GraphQL is easy to use and simple to maintain
     - No need to version the api. The client can simply change its query. Also, it is self-documenting.
+
+### Scalar types
+A scalar type holds a single discrete value. Non-scalar types would be arrays or objects.
+- String
+- Boolean
+- Int
+- Float
+- ID
+
+These values are nullable by default. Add an exclamation to the schema properties to make them non-nullable.
+
+### Custom types
+Add your own type to type definitions.
+
+### Operation arguments
+Alows you to pass data
