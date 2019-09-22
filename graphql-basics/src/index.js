@@ -1,12 +1,53 @@
 import { GraphQLServer } from 'graphql-yoga'
 
+// Demo user data
+const users = [
+  {
+    id: '1',
+    name: 'David',
+    email: 'david@test.com',
+    age: 29,
+  },
+  {
+    id: '2',
+    name: 'Sarah',
+    email: 'sarah@test.com',
+  },
+  {
+    id: '3',
+    name: 'Mike',
+    email: 'mike@test.com',
+  },
+]
+
+const posts = [
+  {
+    id: '1',
+    title: 'first post',
+    body: 'this is the body of the first post',
+    published: true,
+  },
+  {
+    id: '2',
+    title: 'second post',
+    body: 'this is the body of the second post',
+    published: false,
+  },
+  {
+    id: '3',
+    title: 'third post',
+    body: 'this is the body of the third post',
+    published: true,
+  },
+]
+
 // Type definition (schema)
 const typeDefs = `
   type Query {
-    add(a: Float!, b: Float!): Float!
-    greeting(name: String): String
+    users(query: String): [User!]!
     me: User!
     post: Post!
+    posts(query: String): [Post!]!
   }
 
   type User {
@@ -27,15 +68,14 @@ const typeDefs = `
 // Resolvers (functions to get data)
 const resolvers = {
   Query: {
-    add(parent, args) {
-      return args.a + args.b
-    },
-    greeting(parent, args) {
-      if (args.name) {
-        return `Hello, ${args.name}!`
+    users(parent, args) {
+      if (!args.query) {
+        return users
       }
 
-      return 'Hello!'
+      return users.filter(user => {
+        return user.name.toLowerCase().includes(args.query.toLowerCase())
+      })
     },
     me() {
       return {
@@ -50,6 +90,20 @@ const resolvers = {
         title: 'Some Title',
         body: 'Some body',
         published: true,
+      }
+    },
+    posts(parent, args) {
+      if (!args.query) {
+        return posts
+      }
+
+      return posts.filter(isTitleOrBodyMatching)
+
+      function isTitleOrBodyMatching({ title, body }) {
+        const isTitleMatching = title.toLowerCase().includes(args.query)
+        const isBodyMatching = body.toLowerCase().includes(args.query)
+
+        return isTitleMatching || isBodyMatching
       }
     },
   },
