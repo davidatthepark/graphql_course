@@ -33,4 +33,4 @@ Alows you to pass data
 
 ## Mutations
 
-The query operation allows you to read data. The mutation operator is how you create, update, delete data.
+The mutation operator is how you create, update, delete data. This is as opposed to the query operation which allows you to read data.
