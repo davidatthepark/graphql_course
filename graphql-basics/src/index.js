@@ -33,7 +33,7 @@ const posts = [
     id: "2",
     title: "second post",
     body: "this is the body of the second post",
-    published: false,
+    published: true,
     author: "1",
   },
   {
@@ -84,6 +84,8 @@ const typeDefs = `
 
   type Mutation {
     createUser(name: String!, email:String!, age: Int): User!
+    createPost(title: String!, body: String!, published: Boolean!, author: ID!): Post!
+    createComment(text: String!, author: ID!, post: ID!): Comment!
   }
 
   type User {
@@ -165,20 +167,49 @@ const resolvers = {
         throw new Error("Email taken.");
       }
 
-      const user = {
-        id: uuidv4(),
-        name: args.name,
-        email: args.email,
-        age: args.age,
-      };
+      const user = { id: uuidv4(), ...args };
 
       users.push(user);
 
       return user;
     },
+    createPost(parent, args, context, info) {
+      const userExists = users.some(user => user.id === args.author);
+
+      if (!userExists) {
+        throw new Error("User not found");
+      }
+
+      const post = { id: uuidv4(), args };
+
+      posts.push(post);
+
+      return post;
+    },
+    createComment(parent, args, context, info) {
+      const userExists = users.some(user => user.id === args.author);
+
+      if (!userExists) {
+        throw new Error("User not found");
+      }
+
+      const postExists = posts.some(
+        post => post.id === args.post && post.published,
+      );
+
+      if (!postExists) {
+        throw new Error("Post not found");
+      }
+
+      const comment = { id: uuidv4(), ...args };
+
+      comments.push(comment);
+
+      return comment;
+    },
   },
   Post: {
-    // Parent here is the parent post. GraphQL wiill see there is no author in posts and look to the Post resolver.
+    // Parent here is the parent post. GraphQL will see there is no author in posts and look to the Post resolver.
     author(parent, args, context, info) {
       return users.find(user => {
         return user.id === parent.author;
