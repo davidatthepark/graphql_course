@@ -73,6 +73,8 @@ const comments = [
 ];
 
 // Type definition (schema)
+// Input types are objects that hold the fields for a mutation.
+// Basically, the mutation args types so you don't have to specify each one.
 const typeDefs = `
   type Query {
     users(query: String): [User!]!
@@ -83,9 +85,28 @@ const typeDefs = `
   }
 
   type Mutation {
-    createUser(name: String!, email:String!, age: Int): User!
-    createPost(title: String!, body: String!, published: Boolean!, author: ID!): Post!
-    createComment(text: String!, author: ID!, post: ID!): Comment!
+    createUser(data: CreateUserInput!): User!
+    createPost(data: CreatePostInput!): Post!
+    createComment(data: CreateCommentInput!): Comment!
+  }
+
+  input CreateUserInput {
+    name: String!
+    email: String!
+    age: Int
+  }
+
+  input CreatePostInput {
+    title: String!
+    body: String!
+    published: Boolean!
+    author: ID!
+  }
+
+  input CreateCommentInput{
+    text: String!
+    author: ID!
+    post: ID!
   }
 
   type User {
@@ -161,47 +182,47 @@ const resolvers = {
   },
   Mutation: {
     createUser(parent, args, context, info) {
-      const emailTaken = users.some(user => user.email === args.email);
+      const emailTaken = users.some(user => user.email === args.data.email);
 
       if (emailTaken) {
         throw new Error("Email taken.");
       }
 
-      const user = { id: uuidv4(), ...args };
+      const user = { id: uuidv4(), ...args.data };
 
       users.push(user);
 
       return user;
     },
     createPost(parent, args, context, info) {
-      const userExists = users.some(user => user.id === args.author);
+      const userExists = users.some(user => user.id === args.data.author);
 
       if (!userExists) {
         throw new Error("User not found");
       }
 
-      const post = { id: uuidv4(), args };
+      const post = { id: uuidv4(), ...args.data };
 
       posts.push(post);
 
       return post;
     },
     createComment(parent, args, context, info) {
-      const userExists = users.some(user => user.id === args.author);
+      const userExists = users.some(user => user.id === args.data.author);
 
       if (!userExists) {
         throw new Error("User not found");
       }
 
       const postExists = posts.some(
-        post => post.id === args.post && post.published,
+        post => post.id === args.data.post && post.published,
       );
 
       if (!postExists) {
         throw new Error("Post not found");
       }
 
-      const comment = { id: uuidv4(), ...args };
+      const comment = { id: uuidv4(), ...args.data };
 
       comments.push(comment);
 
