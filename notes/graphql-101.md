@@ -34,3 +34,7 @@ Alows you to pass data
 ## Mutations
 
 The mutation operator is how you create, update, delete data. This is as opposed to the query operation which allows you to read data.
+
+## Subscriptions
+
+The subscription operator allows you to have real-time data. GraphQL uses websockets under the hood.
