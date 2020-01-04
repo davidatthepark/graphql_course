@@ -10,3 +10,7 @@ A personal repo for learning GraphQL
   - see package.json in `./graphql-basics` directory for commands.
 - `./graphql-prisma`
   - main directory for the graphql with prisma integration.
+
+## Getting Started locally
+
+- Docs located at `graphql-prisma/README.md`
