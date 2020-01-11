@@ -1,12 +1,28 @@
 const Query = {
-  users(parent, args, { db }, info) {
-    if (!args.query) {
-      return db.users;
+  // What is going on here?
+  // A node server is started that has the context of prisma running on a container (localhost:4466). The prisma container is connected to our heroku postgres db.
+  // When we query locally at localhost:4000, the node graphql server can pass the query to prisma.
+
+  // parent, args, context, info
+  users(parent, args, { db, prisma }, info) {
+    const opArgs = {};
+
+    if (args.query) {
+      opArgs.where = {
+        OR: [
+          {
+            name_contains: args.query,
+          },
+          {
+            email_contains: args.query,
+          },
+        ],
+      };
     }
 
-    return db.users.filter(user => {
-      return user.name.toLowerCase().includes(args.query.toLowerCase());
-    });
+    // The info argument contains everything about the query.
+    // We return a promise.
+    return prisma.query.users(opArgs, info);
   },
   me(parent, args, { db }, info) {
     return {
@@ -23,22 +39,19 @@ const Query = {
       published: true,
     };
   },
-  posts(parent, args, { db }, info) {
-    if (!args.query) {
-      return db.posts;
+  posts(parent, args, { db, prisma }, info) {
+    const opArgs = {};
+
+    if (args.query) {
+      opArgs.where = {
+        OR: [{ title_contains: args.query }, { body_contains: args.query }],
+      };
     }
 
-    return db.posts.filter(isTitleOrBodyMatching);
-
-    function isTitleOrBodyMatching({ title, body }) {
-      const isTitleMatching = title.toLowerCase().includes(args.query);
-      const isBodyMatching = body.toLowerCase().includes(args.query);
-
-      return isTitleMatching || isBodyMatching;
-    }
+    return prisma.query.posts(opArgs, info);
   },
-  comments(parent, args, { db }, info) {
-    return db.comments;
+  comments(parent, args, { db, prisma }, info) {
+    return prisma.query.comments(null, info);
   },
 };
 

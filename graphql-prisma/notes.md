@@ -20,3 +20,7 @@ Prisma is a GraphQL ORM. It is database agnostic. It wraps the database and expo
 - Two choices:
   - SET_NULL (default)
   - CASCADE
+
+## Authentication
+
+- Anyone can query or mutate data without authentication. We need to lock down our API aside from publicy available data such as published posts.
