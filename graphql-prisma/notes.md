@@ -25,3 +25,9 @@ Prisma is a GraphQL ORM. It is database agnostic. It wraps the database and expo
 
 - Anyone can query or mutate data in our prisma API without authentication. We need to lock down our API aside from publicy available data such as published posts.
 - This is one of the main reasons why we need a node.js server intermediary. We can lockdown the prisma API and use the node server to do things like authentication, sanitization, and validation. We want to restrict actions by roles, authentication, and more.
+
+## Prisma Commands
+
+`prisma deploy`: deploys the prisma API
+`prisma delete`: deletes the db
+`prisma token`: generates an auth token

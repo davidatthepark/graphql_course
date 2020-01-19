@@ -1,4 +1,5 @@
 # Type definition (schema)
+# This file contains the schemas for the nodejs server.
 # Input types are objects that hold the fields for a mutation.
 # Basically, the mutation args types so you don't have to specify each one.
 
@@ -11,7 +12,7 @@ type Query {
 }
 
 type Mutation {
-  createUser(data: CreateUserInput!): User!
+  createUser(data: CreateUserInput!): AuthPayload!
   deleteUser(id: ID!): User!
   updateUser(id: ID!, data: UpdateUserInput!): User!
   createPost(data: CreatePostInput!): Post!
@@ -30,6 +31,7 @@ type Subscription {
 input CreateUserInput {
   name: String!
   email: String!
+  password: String!
 }
 
 input UpdateUserInput {
@@ -64,8 +66,14 @@ type User {
   id: ID!
   name: String!
   email: String!
+  password: String!
   posts: [Post!]!
   comments: [Comment!]!
+}
+
+type AuthPayload {
+  token: String!
+  user: User!
 }
 
 type Post {

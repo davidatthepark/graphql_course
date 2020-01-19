@@ -1,9 +1,28 @@
-import uuidv4 from "uuid/v4";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 
 const Mutation = {
-  createUser(parent, args, { prisma }, info) {
-    // info will return the info we requested
-    return prisma.mutation.createUser({ data: args.data }, info);
+  // info will return the info we requested
+  async createUser(parent, args, { prisma }, info) {
+    if (args.data.password.length < 8) {
+      throw new Error("Password must be 8 characters or longer.");
+    }
+
+    // Bcrypt's second argument is a salt
+    // A salt is a random series of characters that are hashed along
+    // with the string you are hashing. It is more secure.
+    const password = await bcrypt.hash(args.data.password, 10);
+    const user = await prisma.mutation.createUser({
+      data: {
+        ...args.data,
+        password,
+      },
+    });
+
+    return {
+      user,
+      token: jwt.sign({ userId: user.id }, "thisisasecret"),
+    };
   },
   deleteUser(parent, args, { prisma }, info) {
     return prisma.mutation.deleteUser({ where: { id: args.id } }, info);
