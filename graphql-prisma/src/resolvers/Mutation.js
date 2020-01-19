@@ -2,7 +2,10 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
 const Mutation = {
-  // info will return the info we requested
+  // first argument returns the parent
+  // second argument is any args passed to the query
+  // third argument is context
+  // fourth argument will return the info we requested
   async createUser(parent, args, { prisma }, info) {
     if (args.data.password.length < 8) {
       throw new Error("Password must be 8 characters or longer.");
@@ -21,8 +24,34 @@ const Mutation = {
 
     return {
       user,
+      // first argument can be anything
       token: jwt.sign({ userId: user.id }, "thisisasecret"),
     };
+  },
+  async login(parent, args, { prisma }, info) {
+    const user = await prisma.query.user({
+      where: {
+        email: args.data.email,
+      },
+    });
+
+    if (!user) {
+      throw new Error("Incorrect credentials");
+    }
+
+    const isPasswordMatching = await bcrypt.compare(
+      args.data.password,
+      user.password,
+    );
+
+    if (!isPasswordMatching) {
+      // "Incorrect password" here could tell a hacker
+      // that the email is correct, which we don't want.
+      // Instead, use a generic message.
+      throw new Error("Incorrect credentials");
+    }
+
+    return { user, token: jwt.sign({ userId: user.id }, "thisisasecret") };
   },
   deleteUser(parent, args, { prisma }, info) {
     return prisma.mutation.deleteUser({ where: { id: args.id } }, info);
